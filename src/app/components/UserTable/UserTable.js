@@ -66,7 +66,6 @@ const UserTable = () => {
       }));
     } else if (keys.length === 2) {
       const [parent, child] = keys;
-      console.log(keys);
       if (parent === "address" && child === "state") {
         setFormData((prev) => ({
           ...prev,
@@ -141,11 +140,7 @@ const UserTable = () => {
     setShow(false);
     setEditIndex(null);
     setErrorMessage("");
-
-    console.log(formData, "form logged");
   };
-
-  console.log(users, "uses");
 
   return (
     <section className="container user_table-container">
