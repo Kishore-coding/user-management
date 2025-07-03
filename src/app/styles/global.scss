@@ -1,0 +1,29 @@
+.container {
+  width: 90%;
+  margin: 0 auto;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+  padding: 0 24px;
+  width: fit-content;
+  height: 48px;
+  border-radius: 25px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #000;
+  color: #fff;
+}
+.btn-danger {
+  background-color: rgb(146, 5, 5);
+  color: #fff;
+}
+
+.btn-voilet {
+  background-color: rgb(110, 2, 110);
+  color: #fff;
+}

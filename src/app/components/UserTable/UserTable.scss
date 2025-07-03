@@ -1,0 +1,76 @@
+.user_table-container {
+  margin-top: 60px;
+  .heading-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(190, 178, 197);
+    padding: 24px;
+  }
+  .user-table-info {
+    width: 100%;
+    border-collapse: collapse;
+    table {
+      width: 100%;
+      thead {
+        background-color: #f5f5f5;
+        color: #333;
+
+        td {
+          font-weight: bold;
+          padding: 12px;
+          border-bottom: 1px solid #ccc;
+        }
+      }
+
+      tbody {
+        tr {
+          &:nth-child(even) {
+            background-color: #fafafa;
+          }
+
+          &:hover {
+            background-color: #f0f0f0;
+          }
+
+          td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+          }
+        }
+
+        .linkedin-cell,
+        .address-cell {
+          max-width: 250px;
+          word-wrap: break-word;
+        }
+        .btn-danger {
+          margin-left: 12px;
+        }
+      }
+    }
+  }
+
+  .delete_entry_modal {
+    h3 {
+      width: 90%;
+    }
+    .yes_no_cta {
+      margin-top: 16px;
+      > * + * {
+        margin-left: 16px;
+      }
+    }
+  }
+
+  .no_user-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    p {
+      font-size: 24px;
+      color: rgb(190, 176, 176);
+    }
+  }
+}
