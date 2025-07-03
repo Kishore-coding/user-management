@@ -43,9 +43,6 @@ const FormFields = ({
                       : ""
                   }`}
                 >
-                  {errorMessage[field_name] && (
-                    <p className="error-msg">{errorMessage[field_name]}</p>
-                  )}
                   <input
                     type={field.type}
                     required={field.required}
@@ -56,6 +53,9 @@ const FormFields = ({
                     onChange={handleChange}
                     placeholder={field.placeholder}
                   />
+                  {errorMessage[field_name] && (
+                    <p className="error-msg">{errorMessage[field_name]}</p>
+                  )}
                 </div>
               );
             } else if (field_name === "gender") {

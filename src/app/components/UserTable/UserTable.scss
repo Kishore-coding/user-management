@@ -43,9 +43,31 @@
         .address-cell {
           max-width: 250px;
           word-wrap: break-word;
+          a {
+            text-decoration: underline;
+            &:hover {
+              text-decoration: none;
+            }
+          }
         }
         .btn-danger {
           margin-left: 12px;
+        }
+        .address-cell {
+          button {
+            padding: 0px;
+            text-decoration: underline;
+            &:hover {
+              text-decoration: none;
+            }
+          }
+          .address-list {
+            p {
+              display: flex;
+              flex-direction: column;
+              row-gap: 4px;
+            }
+          }
         }
       }
     }

@@ -17,13 +17,22 @@ button {
 .btn-primary {
   background-color: #000;
   color: #fff;
+  &:hover {
+    background-color: #362d2d;
+  }
 }
 .btn-danger {
   background-color: rgb(146, 5, 5);
   color: #fff;
+  &:hover {
+    background-color: rgb(173, 4, 4);
+  }
 }
 
 .btn-voilet {
   background-color: rgb(110, 2, 110);
   color: #fff;
+  &:hover {
+    background-color: rgb(155, 2, 155);
+  }
 }

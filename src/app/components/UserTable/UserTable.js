@@ -1,5 +1,5 @@
 "use client";
-import { tableHeader } from "@/app/data/helpers";
+import { capitalizeFirstLetter, tableHeader } from "@/app/data/helpers";
 import React, { useState } from "react";
 import CustomModal from "../CustomModal/CustomModal";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,6 +31,7 @@ const UserTable = () => {
   const [editIndex, setEditIndex] = useState(null);
 
   const [errorMessage, setErrorMessage] = useState("");
+  const [showAddress, setShowAddress] = useState(false);
 
   const handleModal = (user) => {
     if (user) {
@@ -41,6 +42,7 @@ const UserTable = () => {
       setEditIndex(null);
     }
     setShow(!show);
+    setErrorMessage("");
   };
 
   const handleDeleteModal = (id) => {
@@ -55,36 +57,72 @@ const UserTable = () => {
     setShowDeleteModal(!showDeleteModal);
   };
 
+  const checkErrors = (name, value) => {
+    const newErrors = { ...errorMessage };
+
+    switch (name) {
+      case "name":
+        if (!value.trim()) {
+          newErrors.name = "Name is required";
+        } else if (value.length < 3) {
+          newErrors.name = "Name must be atleast 3 characters";
+        } else if (value.length > 20) {
+          newErrors.name = "Name must be atmost 20 characters";
+        } else delete newErrors.name;
+        break;
+
+      case "email":
+        if (!value.trim()) {
+          newErrors.email = "Email is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          newErrors.email = "Invalid email format";
+        } else delete newErrors.email;
+        break;
+
+      case "linkedin":
+        if (!value.trim()) {
+          newErrors.linkedin = "LinkedIn URL is required";
+        } else if (!/^https:\/\/(www\.)?linkedin\.com\/.*$/.test(value)) {
+          newErrors.linkedin = "Invalid LinkedIn URL";
+        } else delete newErrors.linkedin;
+        break;
+
+      case "address.line1":
+        if (!value.trim()) {
+          newErrors.line1 = "Address line 1 is required";
+        } else delete newErrors.line1;
+        break;
+
+      case "address.pin":
+        if (!value.trim()) {
+          newErrors.pin = "Pin code is required";
+        } else if (!/^\d{6}$/.test(value)) {
+          newErrors.pin = "Invalid pin code(must be 6 digits)";
+        } else delete newErrors.pin;
+        break;
+      default:
+        break;
+    }
+
+    setErrorMessage(newErrors);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const keys = name.split(".");
+    const keyItem = name.split(".");
 
-    if (keys.length === 1) {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    } else if (keys.length === 2) {
-      const [parent, child] = keys;
-      if (parent === "address" && child === "state") {
-        setFormData((prev) => ({
-          ...prev,
-          [parent]: {
-            ...prev[parent],
-            state: value,
-            city: "",
-          },
-        }));
-      } else {
-        setFormData((prev) => ({
-          ...prev,
-          [parent]: {
-            ...prev[parent],
-            [child]: value,
-          },
-        }));
-      }
+    const updatedData = { ...formData };
+    if (keyItem.length == 1) {
+      updatedData[keyItem[0]] = value;
+    } else {
+      updatedData[keyItem[0]] = {
+        ...formData[keyItem[0]],
+        [keyItem[1]]: value,
+      };
     }
+
+    setFormData(updatedData);
+    checkErrors(name, value);
   };
 
   const handleSubmit = (e) => {
@@ -94,36 +132,36 @@ const UserTable = () => {
     const { name, email, linkedin, address } = formData;
 
     if (!name.trim()) {
-      errors.name = "Name is required.";
+      errors.name = "Name is required";
     } else if (name.length < 3) {
-      errors.name = "Name must be at least 3 characters.";
+      errors.name = "Name must be atleast 3 characters";
     } else if (name.length > 20) {
-      errors.name = "Name must be at most 20 characters.";
+      errors.name = "Name must be atmost 20 characters";
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim()) {
       errors.email = "Email is required";
     } else if (!emailRegex.test(email)) {
-      errors.email = "Invalid email format.";
+      errors.email = "Invalid email format";
     }
 
     const linkedinRegex = /^https:\/\/(www\.)?linkedin\.com\/.*$/;
     if (!linkedin.trim()) {
-      errors.linkedin = "LinkedIn URL is required.";
+      errors.linkedin = "LinkedIn URL is required";
     } else if (!linkedinRegex.test(linkedin)) {
-      errors.linkedin = "Invalid LinkedIn URL.";
+      errors.linkedin = "Invalid LinkedIn URL";
     }
 
     if (!address.line1.trim()) {
-      errors.line1 = "Addreess line 1 is required";
+      errors.line1 = "Address line 1 is required";
     }
 
     const pinRegex = /^\d{6}$/;
     if (!address.pin.trim()) {
-      errors.pin = "PIN code is required.";
+      errors.pin = "Pin code is required";
     } else if (!pinRegex.test(address.pin)) {
-      errors.pin = "Invalid PIN code (must be 6 digits).";
+      errors.pin = "Invalid pin code(must be 6 digits)";
     }
 
     if (Object.keys(errors).length > 0) {
@@ -140,6 +178,10 @@ const UserTable = () => {
     setShow(false);
     setEditIndex(null);
     setErrorMessage("");
+  };
+
+  const handleAddressView = () => {
+    setShowAddress(!showAddress);
   };
 
   return (
@@ -166,9 +208,54 @@ const UserTable = () => {
                 <tr key={index}>
                   <td>{user.name}</td>
                   <td>{user.email}</td>
-                  <td className="linkedin-cell">{user.linkedin}</td>
-                  <td>{user.gender}</td>
-                  <td className="address-cell">{`${user.address.line1} ${user.address.line2} ${user.address.city} ${user.address.state}`}</td>
+                  <td className="linkedin-cell">
+                    <a target="_blank" href={user.linkedin}>
+                      {user.linkedin}
+                    </a>
+                  </td>
+                  <td>{capitalizeFirstLetter(user.gender)}</td>
+                  <td className="address-cell">
+                    <button type="button" onClick={handleAddressView}>
+                      View Address
+                    </button>
+                    {showAddress && (
+                      <div className="address-list">
+                        <p>
+                          <span>
+                            Address Line 1:
+                            {`${capitalizeFirstLetter(
+                              user.address.line1 + ","
+                            )}`}
+                          </span>
+                          <span>
+                            Address Line 2:
+                            {`${
+                              user.address.line2
+                                ? capitalizeFirstLetter(user.address.line2)
+                                : ""
+                            }`}
+                          </span>
+                          <span>
+                            city:
+                            {`${
+                              user.address.city
+                                ? capitalizeFirstLetter(user.address.city)
+                                : ""
+                            }`}
+                          </span>
+                          <span>
+                            State:
+                            {`${
+                              user.address.state
+                                ? capitalizeFirstLetter(user.address.state)
+                                : ""
+                            }`}
+                          </span>
+                        </p>
+                      </div>
+                    )}
+                  </td>
+
                   <td>
                     <button
                       className="btn-voilet"
@@ -209,7 +296,7 @@ const UserTable = () => {
         show={showDeleteModal}
         onClose={handleDeleteModal}
       >
-        <h3>Are you sure you want to delete this user details</h3>
+        <h3>Are you sure you want to delete this user details?</h3>
         <div className="yes_no_cta">
           <button
             className="btn-voilet"

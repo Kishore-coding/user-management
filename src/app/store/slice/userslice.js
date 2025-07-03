@@ -16,10 +16,12 @@ const userSlice = createSlice({
       const index = state.users.findIndex(
         (user) => user.id === action.payload.id
       );
-      if (index !== -1) state.users[index] = action.payload;
+      if (index !== -1) {
+        state.users[index] = action.payload;
+      }
     },
     deleteUser: (state, action) => {
-      state.users = state.users.filter((u) => u.id !== action.payload);
+      state.users = state.users.filter((user) => user.id !== action.payload);
     },
   },
 });

@@ -67,6 +67,11 @@ export const formFields = [
 ];
 
 export const stateOptions = [
-  { state: "TamilNadu", city: ["coimbatore", "chenai"] },
-  { state: "kerla", city: ["Kochi", "Thrissue"] },
+  { state: "Tamil Nadu", city: ["coimbatore", "chennai"] },
+  { state: "kerla", city: ["Kochi", "Thrissur"] },
 ];
+
+export const capitalizeFirstLetter = (text) => {
+  if (!text) return;
+  return text.charAt(0)?.toUpperCase() + text.slice(1);
+};
